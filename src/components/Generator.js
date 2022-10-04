@@ -53,6 +53,7 @@ const Generator = () => {
     } else {
       setSymbolsChecked((prev) => !prev);
     }
+    handlePasswordStrengthCheck();
   };
 
   const handleSliderChange = (e) => {
@@ -62,7 +63,19 @@ const Generator = () => {
   };
 
   const handlePasswordStrengthCheck = () => {
-    if (passwordLength < 10) {
+    if (
+      !upperCaseChecked &&
+      !lowerCaseChecked &&
+      !numbersChecked &&
+      !symbolsChecked
+    ) {
+      setMeterTitle('Too-Weak');
+      setBarOne('too-weak');
+      setBarTwo('');
+      setBarThree('');
+      setBarFour('');
+      setBarFive('');
+    } else if (passwordLength == 8 || passwordLength == 9) {
       setMeterTitle('Too-Weak');
       setBarOne('too-weak');
       setBarTwo('');
@@ -91,12 +104,12 @@ const Generator = () => {
       setBarFour('strong');
       setBarFive('');
     } else if (passwordLength < 23) {
-      setMeterTitle('Godlike');
-      setBarOne('godlike');
-      setBarTwo('godlike');
-      setBarThree('godlike');
-      setBarFour('godlike');
-      setBarFive('godlike');
+      setMeterTitle('Elite');
+      setBarOne('elite');
+      setBarTwo('elite');
+      setBarThree('elite');
+      setBarFour('elite');
+      setBarFive('elite');
     } else {
       setBarOne('');
       setBarTwo('');
