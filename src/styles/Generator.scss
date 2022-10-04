@@ -32,6 +32,17 @@
     mix-blend-mode: normal;
     opacity: 0.25;
   }
+
+  .no-option-selected {
+    font-size: 20px;
+    color: #e6e5ea;
+    mix-blend-mode: normal;
+    opacity: 0.25;
+  }
+
+  .copy-icon {
+    cursor: pointer;
+  }
 }
 
 .generator-container {

@@ -10,8 +10,8 @@ const Generator = () => {
   const [passwordStrength, setPasswordStrength] = useState(2);
   // Checkbox variables
   const [upperCaseChecked, setUpperCaseChecked] = useState(false);
-  const [lowerCaseCheckedChecked, setLowerCaseChecked] = useState(true);
-  const [numbersCheckedChecked, setNumbersCheckedChecked] = useState(false);
+  const [lowerCaseChecked, setLowerCaseChecked] = useState(true);
+  const [numbersChecked, setNumbersChecked] = useState(false);
   const [symbolsChecked, setSymbolsChecked] = useState(false);
   // Strength meter bar variables
   const [meterTitle, setMeterTitle] = useState('Too-weak');
@@ -28,16 +28,19 @@ const Generator = () => {
   const characterGenerator = () => {
     const finalArray = characterFactory(
       upperCaseChecked,
-      lowerCaseCheckedChecked,
-      numbersCheckedChecked,
+      lowerCaseChecked,
+      numbersChecked,
       symbolsChecked
     );
     return finalArray[Math.floor(Math.random() * finalArray.length)];
   };
 
   const passwordGenerator = (pwdLength) => {
-    let password = [...Array(pwdLength)].map(characterGenerator).join('');
-    return password;
+    let passwordString = [...Array(parseInt(pwdLength))]
+      .map(characterGenerator)
+      .join('');
+    setPassword(passwordString);
+    return passwordString;
   };
 
   const handleCheckboxToggle = (type) => {
@@ -46,7 +49,7 @@ const Generator = () => {
     } else if (type === 'lowercase') {
       setLowerCaseChecked((prev) => !prev);
     } else if (type === 'numbers') {
-      setNumbersCheckedChecked((prev) => !prev);
+      setNumbersChecked((prev) => !prev);
     } else {
       setSymbolsChecked((prev) => !prev);
     }
@@ -55,6 +58,7 @@ const Generator = () => {
   const handleSliderChange = (e) => {
     setPasswordLength(e.target.value);
     handlePasswordStrengthCheck();
+    passwordGenerator(passwordLength);
   };
 
   const handlePasswordStrengthCheck = () => {
@@ -102,18 +106,25 @@ const Generator = () => {
     }
   };
 
-  console.log('test123', passwordGenerator(passwordLength), passwordLength);
+  const handleCopyPassword = () => {
+    navigator.clipboard.writeText(password);
+  };
 
   return (
     <div className="wrapper">
       <div className="app-title">Password Generator</div>
       <div className="password">
-        {passwordLength > 0 ? (
-          <span>{passwordGenerator(passwordLength)}</span>
+        {!upperCaseChecked &&
+        !lowerCaseChecked &&
+        !numbersChecked &&
+        !symbolsChecked ? (
+          <span className="no-option-selected">Select an option</span>
+        ) : passwordLength > 0 ? (
+          <span>{password}</span>
         ) : (
           <span className="password-no-length">P4$5W0rD!</span>
         )}
-        <CopyIcon />
+        <CopyIcon onClick={handleCopyPassword} className="copy-icon" />
       </div>
       <div className="generator-container">
         <div>
@@ -144,14 +155,14 @@ const Generator = () => {
             onClick={() => handleCheckboxToggle('lowercase')}
             className="checkbox-container"
           >
-            <input type="checkbox" checked={lowerCaseCheckedChecked} />
+            <input type="checkbox" checked={lowerCaseChecked} />
             <span>Include Lowercase Letters</span>
           </div>
           <div
             onClick={() => handleCheckboxToggle('numbers')}
             className="checkbox-container"
           >
-            <input type="checkbox" checked={numbersCheckedChecked} />
+            <input type="checkbox" checked={numbersChecked} />
             <span>Include Numbers</span>
           </div>
           <div

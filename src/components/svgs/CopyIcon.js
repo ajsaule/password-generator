@@ -1,7 +1,14 @@
 import * as React from 'react';
 
-const CopyIcon = () => (
-  <svg width={18} height={20} fill="none" xmlns="http://www.w3.org/2000/svg">
+const CopyIcon = ({ onClick, className }) => (
+  <svg
+    onClick={onClick}
+    className={className}
+    width={18}
+    height={20}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <path
       fillRule="evenodd"
       clipRule="evenodd"

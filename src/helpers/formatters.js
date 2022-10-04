@@ -95,44 +95,44 @@ export const characterFactory = (
   num = false,
   symbol = false
 ) => {
-  let passwordArray = [];
+  let characterArray = [];
 
-  if (upCase && !lowCase && !num && !symbol) passwordArray = alphabetUpperCase;
+  if (upCase && !lowCase && !num && !symbol) characterArray = alphabetUpperCase;
   else if (upCase && lowCase && !num && !symbol)
-    passwordArray = [...alphabetUpperCase, ...alphabetLowerCase];
+    characterArray = [...alphabetUpperCase, ...alphabetLowerCase];
   else if (upCase && !lowCase && num && !symbol)
-    passwordArray = [...alphabetUpperCase, ...alphabetLowerCase];
+    characterArray = [...alphabetUpperCase, ...alphabetLowerCase];
   else if (upCase && lowCase && num && !symbol)
-    passwordArray = [...alphabetUpperCase, ...alphabetLowerCase, ...numbers];
-  else if (symbol && !upCase && !lowCase && !num) passwordArray = specialChars;
+    characterArray = [...alphabetUpperCase, ...alphabetLowerCase, ...numbers];
+  else if (symbol && !upCase && !lowCase && !num) characterArray = specialChars;
   else if (symbol && !upCase && lowCase && !num)
-    passwordArray = [...specialChars, ...alphabetLowerCase];
+    characterArray = [...specialChars, ...alphabetLowerCase];
   else if (symbol && upCase && !lowCase && !num)
-    passwordArray = [...specialChars, ...alphabetUpperCase];
+    characterArray = [...specialChars, ...alphabetUpperCase];
   else if (symbol && !upCase && lowCase && num)
-    passwordArray = [...specialChars, ...alphabetLowerCase, ...numbers];
-  else if (num && !symbol && !upCase && !lowCase) passwordArray = numbers;
+    characterArray = [...specialChars, ...alphabetLowerCase, ...numbers];
+  else if (num && !symbol && !upCase && !lowCase) characterArray = numbers;
   else if (num && symbol && !upCase && !lowCase)
-    passwordArray = [...numbers, ...specialChars];
+    characterArray = [...numbers, ...specialChars];
   else if (num && !symbol && upCase && !lowCase)
-    passwordArray = [...numbers, ...alphabetUpperCase];
+    characterArray = [...numbers, ...alphabetUpperCase];
   else if (num && symbol && upCase && !lowCase)
-    passwordArray = [...numbers, ...specialChars, ...alphabetUpperCase];
+    characterArray = [...numbers, ...specialChars, ...alphabetUpperCase];
   else if (lowCase && !num && !symbol && !upCase)
-    passwordArray = alphabetLowerCase;
+    characterArray = alphabetLowerCase;
   else if (lowCase && num && !symbol && !upCase)
-    passwordArray = [...alphabetLowerCase, ...numbers];
+    characterArray = [...alphabetLowerCase, ...numbers];
   else if (lowCase && !num && symbol && !upCase)
-    passwordArray = [...alphabetLowerCase, ...specialChars];
+    characterArray = [...alphabetLowerCase, ...specialChars];
   else if (lowCase && num && symbol && !upCase)
-    passwordArray = [...alphabetLowerCase, ...numbers, ...specialChars];
+    characterArray = [...alphabetLowerCase, ...numbers, ...specialChars];
   else if (upCase && lowCase && num && symbol)
-    passwordArray = [
+    characterArray = [
       ...alphabetUpperCase,
       ...alphabetLowerCase,
       ...numbers,
       ...specialChars,
     ];
 
-  return passwordArray;
+  return characterArray;
 };
