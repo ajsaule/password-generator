@@ -1,13 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { characterFactory } from '../helpers/formatters';
+import { characterFactory, yearFormatter } from '../helpers/formatters';
+import { Mellt } from '../helpers/generators';
 import '../styles/Generator.scss';
 
 import CopyIcon from './svgs/CopyIcon.js';
 
+let mellt = new Mellt();
+
+const getWindowSize = () => {
+  const { innerWidth, innerHeight } = window;
+  return { innerWidth, innerHeight };
+};
+
 const Generator = () => {
-  const [password, setPassword] = useState('');
-  const [passwordLength, setPasswordLength] = useState(0);
-  const [passwordStrength, setPasswordStrength] = useState(2);
+  const [passwordLength, setPasswordLength] = useState(7);
+  const [passwordGenerated, setPasswordGenerated] = useState(false);
   // Checkbox variables
   const [upperCaseChecked, setUpperCaseChecked] = useState(false);
   const [lowerCaseChecked, setLowerCaseChecked] = useState(true);
@@ -20,10 +27,37 @@ const Generator = () => {
   const [barThree, setBarThree] = useState('');
   const [barFour, setBarFour] = useState('');
   const [barFive, setBarFive] = useState('');
+  // Window resize listener
+  const [windowSize, setWindowSize] = useState(getWindowSize());
 
   useEffect(() => {
-    handlePasswordStrengthCheck();
+    const handleWindowResize = () => {
+      setWindowSize(getWindowSize());
+    };
+    window.addEventListener('resize', handleWindowResize);
+
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
   }, []);
+
+  useEffect(() => {
+    if (windowSize.innerWidth > 767 && windowSize.innerWidth < 800) {
+      setPasswordLength(7);
+      handlePasswordStrengthCheck();
+    }
+  }, [windowSize]);
+
+  const passwordGenerator = (pwdLength) => {
+    let passwordString = [...Array(parseInt(pwdLength))]
+      .map(characterGenerator)
+      .join('');
+    return passwordString;
+  };
+
+  useEffect(() => {
+    setPasswordGenerated(true);
+  }, [passwordGenerator]);
 
   const characterGenerator = () => {
     const finalArray = characterFactory(
@@ -35,13 +69,7 @@ const Generator = () => {
     return finalArray[Math.floor(Math.random() * finalArray.length)];
   };
 
-  const passwordGenerator = (pwdLength) => {
-    let passwordString = [...Array(parseInt(pwdLength))]
-      .map(characterGenerator)
-      .join('');
-    setPassword(passwordString);
-    return passwordString;
-  };
+  const password = passwordGenerator(passwordLength);
 
   const handleCheckboxToggle = (type) => {
     if (type === 'uppercase') {
@@ -63,61 +91,47 @@ const Generator = () => {
   };
 
   const handlePasswordStrengthCheck = () => {
-    if (
-      !upperCaseChecked &&
-      !lowerCaseChecked &&
-      !numbersChecked &&
-      !symbolsChecked
-    ) {
+    if (passwordLength <= 9) {
       setMeterTitle('Too-Weak');
       setBarOne('too-weak');
       setBarTwo('');
       setBarThree('');
       setBarFour('');
       setBarFive('');
-    } else if (passwordLength == 8 || passwordLength == 9) {
-      setMeterTitle('Too-Weak');
-      setBarOne('too-weak');
-      setBarTwo('');
-      setBarThree('');
-      setBarFour('');
-      setBarFive('');
-    } else if (passwordLength < 12) {
+    } else if (passwordLength <= 12) {
       setMeterTitle('Weak');
       setBarOne('weak');
       setBarTwo('weak');
       setBarThree('');
       setBarFour('');
       setBarFive('');
-    } else if (passwordLength < 18) {
+    } else if (passwordLength <= 18) {
       setMeterTitle('Medium');
       setBarOne('medium');
       setBarTwo('medium');
       setBarThree('medium');
       setBarFour('');
       setBarFive('');
-    } else if (passwordLength < 20) {
+    } else if (passwordLength <= 20) {
       setMeterTitle('Strong');
       setBarOne('strong');
       setBarTwo('strong');
       setBarThree('strong');
       setBarFour('strong');
       setBarFive('');
-    } else if (passwordLength < 23) {
+    } else if (passwordLength > 20) {
       setMeterTitle('Elite');
       setBarOne('elite');
       setBarTwo('elite');
       setBarThree('elite');
       setBarFour('elite');
       setBarFive('elite');
-    } else {
-      setBarOne('');
-      setBarTwo('');
-      setBarThree('');
-      setBarFour('');
-      setBarFive('');
     }
   };
+
+  useEffect(() => {
+    handlePasswordStrengthCheck();
+  }, [handlePasswordStrengthCheck]);
 
   const handleCopyPassword = () => {
     navigator.clipboard.writeText(password);
@@ -127,16 +141,7 @@ const Generator = () => {
     <div className="wrapper">
       <div className="app-title">Password Generator</div>
       <div className="password">
-        {!upperCaseChecked &&
-        !lowerCaseChecked &&
-        !numbersChecked &&
-        !symbolsChecked ? (
-          <span className="no-option-selected">Select an option</span>
-        ) : passwordLength > 0 ? (
-          <span>{password}</span>
-        ) : (
-          <span className="password-no-length">P4$5W0rD!</span>
-        )}
+        <span>{password}</span>
         <CopyIcon onClick={handleCopyPassword} className="copy-icon" />
       </div>
       <div className="generator-container">
@@ -150,8 +155,8 @@ const Generator = () => {
               onChange={(e) => handleSliderChange(e)}
               value={passwordLength}
               type="range"
-              min="8"
-              max="22"
+              min="7"
+              max={windowSize.innerWidth > 768 ? '35' : '22'}
               steps="1"
             ></input>
           </div>
@@ -164,11 +169,8 @@ const Generator = () => {
             <input type="checkbox" checked={upperCaseChecked} />
             <span>Include Uppercase Letters</span>
           </div>
-          <div
-            onClick={() => handleCheckboxToggle('lowercase')}
-            className="checkbox-container"
-          >
-            <input type="checkbox" checked={lowerCaseChecked} />
+          <div className="checkbox-container disabled">
+            <input type="checkbox" checked={true} disabled={true} />
             <span>Include Lowercase Letters</span>
           </div>
           <div
@@ -197,6 +199,17 @@ const Generator = () => {
               <div className={`bar ${barFour}`}></div>
               <div className={`bar ${barFive}`}></div>
             </div>
+          </div>
+        </div>
+        <div>
+          <div className="time-to-crack-heading">
+            Your password would be cracked in:
+          </div>
+          <div className="time-to-crack">
+            <span className="estimated-time">
+              {passwordGenerated &&
+                yearFormatter(mellt.CheckPassword(password))}
+            </span>
           </div>
         </div>
       </div>

@@ -107,6 +107,15 @@
       margin: -10px 0 0 0;
       outline: none;
     }
+
+    input[type='range']::-webkit-slider-thumb:active {
+      -ms-appearance: none;
+      -moz-appearance: none;
+      -webkit-appearance: none;
+      box-shadow: none;
+      background: #18171f;
+      border: 2px solid #a4ffaf;
+    }
   }
 }
 
@@ -132,6 +141,18 @@
     background-position: center;
   }
 
+  .disabled {
+    cursor: default !important;
+  }
+
+  input[type='checkbox']:disabled {
+    background-image: url('../../public/icons/checkbox-tick.svg') !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    cursor: default;
+    background: #737773;
+  }
+
   span {
     margin-left: 20px;
     font-size: 16px;
@@ -143,6 +164,10 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+
+    input {
+      cursor: pointer;
+    }
   }
 }
 
@@ -207,5 +232,46 @@
   .meter-container {
     display: flex;
     gap: 5px;
+  }
+}
+
+.time-to-crack-heading {
+  text-align: center;
+  font-size: 15px;
+  color: #a4ffaf;
+}
+
+.time-to-crack {
+  height: 65px;
+  width: 100%;
+  background: #a4ffaf;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .estimated-time {
+    font-size: 20px;
+  }
+}
+
+@media (min-width: 768px) {
+  .wrapper {
+    max-width: 540px;
+    height: 695px;
+
+    .app-title {
+      font-size: 24px;
+    }
+  }
+
+  .time-to-crack-heading {
+    // font-size: 18px !important;
+    font-size: 24px !important;
+  }
+
+  .time-to-crack {
+    .estimated-time {
+      font-size: 30px;
+    }
   }
 }
