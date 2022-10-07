@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { characterFactory, yearFormatter } from '../helpers/formatters';
 import { Mellt } from '../helpers/generators';
+import words from 'an-array-of-english-words';
 import '../styles/Generator.scss';
 
 import CopyIcon from './svgs/CopyIcon.js';
@@ -13,6 +14,7 @@ const getWindowSize = () => {
 };
 
 const Generator = () => {
+  const sliderRef = useRef();
   const [passwordLength, setPasswordLength] = useState(7);
   const [passwordGenerated, setPasswordGenerated] = useState(false);
   // Checkbox variables
@@ -47,6 +49,8 @@ const Generator = () => {
       handlePasswordStrengthCheck();
     }
   }, [windowSize]);
+
+  // console.log('test123', words);
 
   const passwordGenerator = (pwdLength) => {
     let passwordString = [...Array(parseInt(pwdLength))]
@@ -135,7 +139,21 @@ const Generator = () => {
 
   const handleCopyPassword = () => {
     navigator.clipboard.writeText(password);
+    console.log('test1234', sliderRef);
   };
+
+  if (passwordGenerated) {
+    sliderRef.current.style.background = `linear-gradient(90deg, rgb(164, 255, 175), ${
+      windowSize.innerWidth > 768
+        ? `${(passwordLength / 35) * 100}%`
+        : `${(passwordLength / 22) * 100}%`
+    }, rgb(164, 255, 175), ${
+      windowSize.innerWidth > 768
+        ? `${(passwordLength / 35) * 100}%)`
+        : `${(passwordLength / 22) * 100}%)`
+    }`;
+    console.log('ran1234');
+  }
 
   return (
     <div className="wrapper">
@@ -152,6 +170,7 @@ const Generator = () => {
           </div>
           <div className="slider">
             <input
+              ref={sliderRef}
               onChange={(e) => handleSliderChange(e)}
               value={passwordLength}
               type="range"

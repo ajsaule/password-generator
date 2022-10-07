@@ -82,13 +82,13 @@
       display: block;
       margin: 10px 0 0 0;
       position: relative;
+      background: #18171f;
     }
 
     input[type='range']::-webkit-slider-runnable-track {
       -ms-appearance: none;
       -moz-appearance: none;
       -webkit-appearance: none;
-      background: #18171f;
       border-radius: 0;
       height: 8px;
       -webkit-appearance: none;
@@ -251,6 +251,7 @@
 
   .estimated-time {
     font-size: 20px;
+    color: #24232c;
   }
 }
 
