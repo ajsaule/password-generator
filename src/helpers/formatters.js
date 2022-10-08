@@ -227,7 +227,7 @@ export const hashPerSecondFormatter = (hashes) => {
   if (hashes <= 0) {
     return 'n/a'
   } else if (hashes < Math.pow(10, 3)) { // less than a thousand
-    return `${hashes} per second`;
+    return hashes === 1 ? `${hashes} hash per second` : `${hashes} per second`;
   } else if (hashes < Math.pow(10, 6)) { // less than a million
     return `${Math.floor(hashes / Math.pow(10, 3))} thousand per second`;
   } else if (hashes < Math.pow(10, 9)) { // less than a billion

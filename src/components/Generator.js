@@ -182,8 +182,6 @@ const Generator = () => {
   const sliderBackgroundPercentage =
     wordsChecked && windowSize.innerWidth > 768 
       ? `${Math.round(((passwordLength - 1) / (6 - 1)) * 100)}%`
-      // : wordsChecked && windowSize.innerWidth > 768 && passwordLength >= 4
-      // ? `${Math.round(((passwordLength - 1) / (6 - 1)) * 100)}%`
       : wordsChecked && windowSize.innerWidth <= 768
       ? `${Math.round((((passwordLength - 1) / (6 - 1)) * 100))}%`
       : windowSize.innerWidth > 768
@@ -308,13 +306,14 @@ const Generator = () => {
           </div>
           {/* </a> */}
           <div className="hash-input-container">
-            <span>Hash Power</span>
+            <span>Hash Rate</span>
             <input
               // oninput="this.value=Number(this.value).toFixed(this.step.split('.')[1].length)"
               value={hashesPerSecond}
               type="number"
               step="1000000000"
               min="0"
+              placeholder="hashes per second"
               className="hashes-per-second"
               onChange={(e) =>
                 hashesPerSecond > 0
