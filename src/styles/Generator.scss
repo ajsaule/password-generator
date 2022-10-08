@@ -21,9 +21,11 @@
   padding: 16px;
 
   span {
-    font-size: 20px;
+    font-size: 17px;
     line-height: 32px;
     color: #e6e5ea;
+    width: 280px;
+    overflow-wrap: break-word;
   }
 
   .password-no-length {
@@ -169,6 +171,21 @@
       cursor: pointer;
     }
   }
+
+  .delimiter-input {
+    margin-left: 15px;
+    border: #a4ffaf 2px solid;
+    background: #e6e5ea;
+    color: #18171f;
+    outline: none;
+    width: 50px;
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 15px;
+    height: 25px;
+    caret-color: #24232c;
+  }
 }
 
 .strength-container {
@@ -231,7 +248,7 @@
 
   .meter-container {
     display: flex;
-    gap: 5px;
+    gap: 6px;
   }
 }
 
@@ -273,6 +290,19 @@
   .time-to-crack {
     .estimated-time {
       font-size: 30px;
+    }
+  }
+
+  .strength-container {
+    .meter-container {
+      gap: 15px;
+    }
+  }
+
+  .password {
+    span {
+      font-size: 20px;
+      width: 480px;
     }
   }
 }

@@ -190,21 +190,25 @@ Mellt.prototype = {
 
     // We can (worst case) try a billion passwords a second. Calculate how many days it
     // will take us to get to the password.
-    var perDay = this.HashesPerSecond * 60 * 60 * 24;
+    // var perYear = this.HashesPerSecond * 60 * 60 * 24 * 365; // years
+    var perDay = this.HashesPerSecond * 60 * 60 * 24; // days
+    // var perMinute = this.HashesPerSecond * 60; // minutes
+    var perSecond = this.HashesPerSecond; // seconds
 
     // This allows us to calculate a number of days to crack. We use days because anything
     // that can be cracked in less than a day is basically useless, so there's no point in
     // having a smaller granularity (hours for example).
+    var seconds = attempts / perSecond;
     var days = attempts / perDay;
 
     // If it's going to take more than a billion days to crack, just return a billion. This
     // helps when code outside this function isn't using bcmath. Besides, if the password
     // can survive 2.7 million years it's probably ok.
-    if (days > 1000000000) {
-      return 1000000000;
-    }
+    // if (days > 1000000000) {
+    //   return 1000000000;
+    // }
 
-    return Math.round(days);
+    return { seconds: Math.round(seconds), days: Math.round(days) };
   },
 };
 
