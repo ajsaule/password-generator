@@ -9,8 +9,8 @@ import {
 import { memorableList } from '../helpers/memorableWordList';
 import { Mellt } from '../helpers/generators';
 
-import words from 'an-array-of-english-words';
-import ReactTooltip from 'react-tooltip-rc';
+// import words from 'an-array-of-english-words';
+// import ReactTooltip from 'react-tooltip-rc';
 
 import '../styles/Generator.scss';
 
