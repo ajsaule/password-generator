@@ -4,6 +4,7 @@ import {
   secondsMinutesDaysYearsFormatter,
   daysYearsFormatter,
   yearFormatter,
+  hashPerSecondFormatter,
 } from '../helpers/formatters';
 import { memorableList } from '../helpers/memorableWordList';
 import { Mellt } from '../helpers/generators';
@@ -26,6 +27,7 @@ const Generator = () => {
   const [passwordLength, setPasswordLength] = useState(7);
   const [passwordGenerated, setPasswordGenerated] = useState(false);
   const [passwordDelimiter, setPasswordDelimiter] = useState('-');
+  const [hashesPerSecond, setHashesPerSecond] = useState(1000000000);
   // Checkbox variables
   const [upperCaseChecked, setUpperCaseChecked] = useState(false);
   const [lowerCaseChecked, setLowerCaseChecked] = useState(true);
@@ -41,7 +43,6 @@ const Generator = () => {
   const [barFive, setBarFive] = useState('');
   // Window resize listener
   const [windowSize, setWindowSize] = useState(getWindowSize());
-  const [tooltip, showTooltip] = useState(true);
 
   useEffect(() => {
     const handleWindowResize = () => {
@@ -127,8 +128,8 @@ const Generator = () => {
   };
 
   const password = passwordGenerator(passwordLength);
-  const timeToCrack = mellt.CheckPassword(password);
-  console.log('test12345', timeToCrack.seconds, timeToCrack.days);
+  const timeToCrack = mellt.CheckPassword(password, hashesPerSecond);
+  // console.log('test12345', timeToCrack.seconds, timeToCrack.days);
 
   const handlePasswordStrengthCheck = () => {
     if (timeToCrack.days === 0) {
@@ -179,10 +180,10 @@ const Generator = () => {
 
   // prettier-ignore
   const sliderBackgroundPercentage =
-    wordsChecked && windowSize.innerWidth > 768 && passwordLength < 4
+    wordsChecked && windowSize.innerWidth > 768 
       ? `${Math.round(((passwordLength - 1) / (6 - 1)) * 100)}%`
-      : wordsChecked && windowSize.innerWidth > 768 && passwordLength >= 4
-      ? `${Math.round(((passwordLength - 1) / (6 - 1)) * 100)}%`
+      // : wordsChecked && windowSize.innerWidth > 768 && passwordLength >= 4
+      // ? `${Math.round(((passwordLength - 1) / (6 - 1)) * 100)}%`
       : wordsChecked && windowSize.innerWidth <= 768
       ? `${Math.round((((passwordLength - 1) / (6 - 1)) * 100))}%`
       : windowSize.innerWidth > 768
@@ -268,6 +269,7 @@ const Generator = () => {
               <input
                 value={passwordDelimiter}
                 maxLength={1}
+                type="text"
                 className="delimiter-input"
                 onChange={(e) => setPasswordDelimiter(e.target.value)}
               ></input>
@@ -288,28 +290,47 @@ const Generator = () => {
           </div>
         </div>
         <div>
-          <a
+          {/* <a
             data-for="main"
-            data-tip="Based on 1 Billion hashes per second"
+            data-tip={'Calculation is done based on ' + hashPerSecondFormatter(hashesPerSecond) + ' hashes per second'}
             data-iscapture="true"
-          >
-            <div className="time-to-crack-heading">
-              Your password would be cracked in:
-            </div>
-            <div className="time-to-crack">
-              <span className="estimated-time">
-                {passwordGenerated &&
-                  daysYearsFormatter(timeToCrack.seconds, timeToCrack.days)}
-              </span>
-            </div>
-          </a>
-          <ReactTooltip
+          > */}
+          <div className="time-to-crack-heading">
+            {timeToCrack.seconds === 0
+              ? 'Your password would be cracked:'
+              : 'Your password would be cracked in:'}
+          </div>
+          <div className="time-to-crack">
+            <span className="estimated-time">
+              {passwordGenerated &&
+                daysYearsFormatter(timeToCrack.seconds, timeToCrack.days)}
+            </span>
+          </div>
+          {/* </a> */}
+          <div className="hash-input-container">
+            <span>Hash Power</span>
+            <input
+              // oninput="this.value=Number(this.value).toFixed(this.step.split('.')[1].length)"
+              value={hashesPerSecond}
+              type="number"
+              step="1000000000"
+              min="0"
+              className="hashes-per-second"
+              onChange={(e) =>
+                hashesPerSecond > 0
+                  ? setHashesPerSecond(e.target.value)
+                  : setHashesPerSecond(1)
+              }
+            ></input>
+            <span>{hashPerSecondFormatter(hashesPerSecond)}</span>
+          </div>
+          {/* <ReactTooltip
             id="main"
             place="top"
             type="dark"
             effect="float"
             multiline={true}
-          />
+          /> */}
         </div>
       </div>
     </div>

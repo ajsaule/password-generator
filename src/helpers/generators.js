@@ -18,7 +18,7 @@ export var Mellt = function () {
    * @var integer HashesPerSecond The number of attempts per second you expect
    * an attacker to be able to attempt. Set to 1 billion by default.
    */
-  this.HashesPerSecond = 1000000000;
+  // this.HashesPerSecond = 1000000000;
 
   /**
    * @var string CommonPasswords A variable containing an array of common
@@ -83,7 +83,10 @@ Mellt.prototype = {
    * force a password, obviously more if you're a bank or other secure system.
    * @throws Exception If an error is encountered.
    */
-  CheckPassword: function (password) {
+  CheckPassword: function (password, hashesPerSecond = 1000000000) {
+    // Moved hashes per second into the function block so we can pass it through as a param
+    let hashPerSec = hashesPerSecond;
+
     // First check passwords in the common password file if available.
     // We do this because "password" takes 129 seconds, but is the first
     // thing an attacker will try.
@@ -191,9 +194,15 @@ Mellt.prototype = {
     // We can (worst case) try a billion passwords a second. Calculate how many days it
     // will take us to get to the password.
     // var perYear = this.HashesPerSecond * 60 * 60 * 24 * 365; // years
-    var perDay = this.HashesPerSecond * 60 * 60 * 24; // days
+    // var perDay = this.HashesPerSecond * 60 * 60 * 24; // days
     // var perMinute = this.HashesPerSecond * 60; // minutes
-    var perSecond = this.HashesPerSecond; // seconds
+    // var perSecond = this.HashesPerSecond; // seconds
+
+    // Below is using the new block scoped parameters that gets passed through from the invoked function
+    // var perYear = hashPerSec * 60 * 60 * 24 * 365; // years
+    var perDay = hashPerSec * 60 * 60 * 24; // days
+    // var perMinute = hashPerSec * 60; // minutes
+    var perSecond = hashPerSec; // seconds
 
     // This allows us to calculate a number of days to crack. We use days because anything
     // that can be cracked in less than a day is basically useless, so there's no point in

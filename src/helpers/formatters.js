@@ -199,19 +199,104 @@ export const yearFormatter = (years) => {
       : years === 1
       ? years + ' year'
       : years + ' years';
-  } else if (years < 1000000) {
+  } else if (years <= 1000000) {
     return `${(years / 1000).toFixed(2)} thousand years`;
-  } else if (years < 1000000000000) {
+  } else if (years <= 1000000000000) {
     return `${(years / 1000000000).toFixed(2)} million years`;
-  } else if (years < 1000000000000000) {
+  } else if (years <= 1000000000000000) {
     return `${(years / 1000000000000).toFixed(2)} billion years`;
-  } else if (years < 1000000000000000000) {
+  } else if (years <= 1000000000000000000) {
     return `${(years / 1000000000000000).toFixed(2)} trillion years`;
-  } else if (years < 1000000000000000000000) {
+  } else if (years <= 1000000000000000000000) {
     return `${(years / 1000000000000000000).toFixed(2)} quadrillion years`;
-  } else if (years < 1000000000000000000000000) {
+  } else if (years <= 1000000000000000000000000) {
     return `${(years / 1000000000000000000000).toFixed(2)} quintillion years`;
   } else if (years >= 1000000000000000000000000) {
     return `> 1 sextillion years`;
   }
+};
+
+// prettier-ignore
+export const hashPerSecondFormatter = (hashes) => {
+  // if (hashes < 1000) {
+  //   return hashes === 1 ? `${hashes} hash` : `${hashes} hashes`;
+  // } else if (hashes < 100000) {
+  //   return `${(hashes / 1000).toFixed(2)} thousand hashes`
+  // } else if (hashes < 1000000000) {
+
+  if (hashes <= 0) {
+    return 'n/a'
+  } else if (hashes < Math.pow(10, 3)) { // less than a thousand
+    return `${hashes} per second`;
+  } else if (hashes < Math.pow(10, 6)) { // less than a million
+    return `${Math.floor(hashes / Math.pow(10, 3))} thousand per second`;
+  } else if (hashes < Math.pow(10, 9)) { // less than a billion
+    return `${Math.floor(hashes / Math.pow(10, 6))} million per second`;
+  } else if (hashes < Math.pow(10, 12)) { // less than a trillion
+    return `${Math.floor(hashes / Math.pow(10, 9))} billion per second`;
+  } else if (hashes < Math.pow(10, 15)) { // less than a quadrillion
+    return `${Math.floor(hashes / Math.pow(10, 12))} trillion per second`;
+  } else if (hashes < Math.pow(10, 18)) { // less than a quintillion
+    return `${Math.floor(hashes / Math.pow(10, 15))} quadrillion per second`;
+  } else if (hashes < Math.pow(10, 21)) { // less than a sextillion
+    return `${Math.floor(hashes / Math.pow(10, 18))} quintillion per second`;
+  } else if (hashes < Math.pow(10, 24)) { // less than a septillion
+    return `${Math.ceil(hashes / Math.pow(10, 21))} sextillion per second`;
+  } else if (hashes < Math.pow(10, 27)) { // less than a octillion
+    return `${Math.floor(hashes / Math.pow(10, 24))} septillion per second`;
+  } else if (hashes < Math.pow(10, 30)) { // less than a nonillion
+    return `${Math.ceil(hashes / Math.pow(10, 27))} octillion per second`;
+  } else if (hashes < Math.pow(10, 33)) { // less than a decillion
+    return `${Math.floor(hashes / Math.pow(10, 30))} nonillion per second`
+  } else if (hashes < Math.pow(10, 36)) { // less than a undecillion
+    return `${Math.floor(hashes / Math.pow(10, 33))} decillion per second`
+  } else if (hashes < Math.pow(10, 39)) { // less than a duodecillion
+    return `${Math.floor(hashes / Math.pow(10, 36))} undecillion per second`
+  } else if (hashes < Math.pow(10, 42)) { // less than a tredecillion
+    return `${Math.ceil(hashes / Math.pow(10, 39))} duodecillion per second`
+  } else if (hashes < Math.pow(10, 45)) { // less than a quattuordecillion
+    return `${Math.floor(hashes / Math.pow(10, 42))} tredecillion per second`
+  } else if (hashes < Math.pow(10, 48)) { // less than a quindecillion
+    return `${Math.floor(hashes / Math.pow(10, 45))} quattuordecillion per second`
+  } else if (hashes < Math.pow(10, 51)) { // less than a sexdecillion
+    return `${Math.ceil(hashes / Math.pow(10, 48))} quindecillion per second`
+  } else if (hashes < Math.pow(10, 54)) { // less than a septemdecillion
+    return `${Math.floor(hashes / Math.pow(10, 51))} sexdecillion per second`
+  } else if (hashes < Math.pow(10, 57)) { // less than a octodecillion
+    return `${Math.floor(hashes / Math.pow(10, 54))} septemdecillion per second`
+  } else if (hashes < Math.pow(10, 60)) { // less than a novemdecillion
+    return `${Math.ceil(hashes / Math.pow(10, 57))} octodecillion per second`
+  } else if (hashes < Math.pow(10, 63)) { // less than a vigintillion
+    return `${Math.floor(hashes / Math.pow(10, 60))} novemdecillion per second`
+  } else if (hashes < Math.pow(10, 66)) { // less than a unvigintillion
+    return `${Math.floor(hashes / Math.pow(10, 63))} vigintillion per second`
+  } else if (hashes < Math.pow(10, 69)) { // less than a duovigintillion 
+    return `${Math.floor(hashes / Math.pow(10, 66))} unvigintillion per second`
+  } else if (hashes < Math.pow(10, 72)) { // less than a trevigintillion 
+    return `${Math.floor(hashes / Math.pow(10, 69))} duovigintillion per second`
+  } else if (hashes < Math.pow(10, 75)) { // less than a quattourvigintillion 
+    return `${Math.floor(hashes / Math.pow(10, 72))} trevigintillion per second`
+  } else if (hashes < Math.pow(10, 78)) { // less than a quinvigintillion
+    return `${Math.floor(hashes / Math.pow(10, 75))} quattourvigintillion per second`
+  } else if (hashes < Math.pow(10, 81)) { // less than a hexvigintillion
+    return `${Math.floor(hashes / Math.pow(10, 78))} quinvigintillion per second`
+  } else if (hashes < Math.pow(10, 84)) { // less than a septenvigintillion
+    return `${Math.floor(hashes / Math.pow(10, 81))} hexvigintillion per second`
+  } else if (hashes < Math.pow(10, 87)) { // less than a octovigintillion
+    return `${Math.floor(hashes / Math.pow(10, 84))} septenvigintillion per second`
+  } else if (hashes < Math.pow(10, 90)) { // less than a novemvigintillion
+    return `${Math.floor(hashes / Math.pow(10, 87))} octovigintillion per second`
+  } else if (hashes < Math.pow(10, 93)) { // less than a trigintillion
+    return `${Math.floor(hashes / Math.pow(10, 90))} octovigintillion per second`
+  } else if (hashes < Math.pow(10, 96)) { // less than a untrigintillion
+    return `${Math.floor(hashes / Math.pow(10, 93))} trigintillion per second`
+  } else if (hashes < Math.pow(10, 99)) { // less than a duotrigintillion
+    return `${Math.floor(hashes / Math.pow(10, 96))} untrigintillion per second`
+  } else if (hashes < Math.pow(10, 100)) { // less than a googol
+    return `${Math.floor(hashes / Math.pow(10, 99))} duotrigintillion per second`
+  } else if (hashes == Math.pow(10, 100)) { // equal to googol
+    return `${Math.floor(hashes / Math.pow(10, 100))} googol per second`
+  } else {
+    return `${Number(hashes).toExponential(2)} per second`
+  } 
 };

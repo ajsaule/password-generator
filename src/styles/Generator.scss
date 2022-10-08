@@ -272,6 +272,32 @@
   }
 }
 
+.hash-input-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  span {
+    font-size: 15px;
+    color: #a4ffaf;
+  }
+}
+
+.hashes-per-second {
+  border: #a4ffaf 2px solid;
+  background: #e6e5ea;
+  color: #18171f;
+  outline: none;
+  width: 200px;
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 15px;
+  height: 25px;
+  caret-color: #24232c;
+}
+
 @media (min-width: 768px) {
   .wrapper {
     max-width: 540px;
