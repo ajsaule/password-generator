@@ -1,7 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { characterFactory, yearFormatter } from '../helpers/formatters';
+import React, { useEffect, useState } from 'react';
+import {
+  characterFactory,
+  secondsMinutesDaysYearsFormatter,
+  daysYearsFormatter,
+  yearFormatter,
+} from '../helpers/formatters';
+import { memorableList } from '../helpers/memorableWordList';
 import { Mellt } from '../helpers/generators';
+
 import words from 'an-array-of-english-words';
+import ReactTooltip from 'react-tooltip-rc';
+
 import '../styles/Generator.scss';
 
 import CopyIcon from './svgs/CopyIcon.js';
@@ -14,14 +23,15 @@ const getWindowSize = () => {
 };
 
 const Generator = () => {
-  const sliderRef = useRef();
   const [passwordLength, setPasswordLength] = useState(7);
   const [passwordGenerated, setPasswordGenerated] = useState(false);
+  const [passwordDelimiter, setPasswordDelimiter] = useState('-');
   // Checkbox variables
   const [upperCaseChecked, setUpperCaseChecked] = useState(false);
   const [lowerCaseChecked, setLowerCaseChecked] = useState(true);
   const [numbersChecked, setNumbersChecked] = useState(false);
   const [symbolsChecked, setSymbolsChecked] = useState(false);
+  const [wordsChecked, setWordsChecked] = useState(false);
   // Strength meter bar variables
   const [meterTitle, setMeterTitle] = useState('Too-weak');
   const [barOne, setBarOne] = useState('');
@@ -31,6 +41,7 @@ const Generator = () => {
   const [barFive, setBarFive] = useState('');
   // Window resize listener
   const [windowSize, setWindowSize] = useState(getWindowSize());
+  const [tooltip, showTooltip] = useState(true);
 
   useEffect(() => {
     const handleWindowResize = () => {
@@ -50,19 +61,6 @@ const Generator = () => {
     }
   }, [windowSize]);
 
-  // console.log('test123', words);
-
-  const passwordGenerator = (pwdLength) => {
-    let passwordString = [...Array(parseInt(pwdLength))]
-      .map(characterGenerator)
-      .join('');
-    return passwordString;
-  };
-
-  useEffect(() => {
-    setPasswordGenerated(true);
-  }, [passwordGenerator]);
-
   const characterGenerator = () => {
     const finalArray = characterFactory(
       upperCaseChecked,
@@ -73,20 +71,54 @@ const Generator = () => {
     return finalArray[Math.floor(Math.random() * finalArray.length)];
   };
 
-  const password = passwordGenerator(passwordLength);
+  const wordGenerator = () => {
+    return memorableList[Math.floor(Math.random() * memorableList.length)];
+  };
+
+  const passwordGenerator = (pwdLength) => {
+    if (pwdLength >= 7) {
+      let passwordString = [...Array(parseInt(pwdLength))]
+        .map(characterGenerator)
+        .join('');
+      return passwordString;
+    } else {
+      let passwordString = [...Array(parseInt(pwdLength))]
+        .map(wordGenerator)
+        .join(passwordDelimiter);
+      return passwordString;
+    }
+  };
+
+  useEffect(() => {
+    setPasswordGenerated(true);
+  }, [passwordGenerator]);
 
   const handleCheckboxToggle = (type) => {
-    if (type === 'uppercase') {
+    if (type === 'uppercase' && !wordsChecked) {
       setUpperCaseChecked((prev) => !prev);
-    } else if (type === 'lowercase') {
+    } else if (type === 'lowercase' && !wordsChecked) {
       setLowerCaseChecked((prev) => !prev);
-    } else if (type === 'numbers') {
+    } else if (type === 'numbers' && !wordsChecked) {
       setNumbersChecked((prev) => !prev);
-    } else {
+    } else if (type === 'symbols' && !wordsChecked) {
       setSymbolsChecked((prev) => !prev);
+    } else {
+      setWordsChecked((prev) => !prev);
+      setUpperCaseChecked(false);
+      setLowerCaseChecked(false);
+      setNumbersChecked(false);
+      setSymbolsChecked(false);
     }
     handlePasswordStrengthCheck();
   };
+
+  useEffect(() => {
+    if (wordsChecked) {
+      setPasswordLength(1);
+    } else {
+      setPasswordLength(7);
+    }
+  }, [wordsChecked]);
 
   const handleSliderChange = (e) => {
     setPasswordLength(e.target.value);
@@ -94,36 +126,40 @@ const Generator = () => {
     passwordGenerator(passwordLength);
   };
 
+  const password = passwordGenerator(passwordLength);
+  const timeToCrack = mellt.CheckPassword(password);
+  console.log('test12345', timeToCrack.seconds, timeToCrack.days);
+
   const handlePasswordStrengthCheck = () => {
-    if (passwordLength <= 9) {
+    if (timeToCrack.days === 0) {
       setMeterTitle('Too-Weak');
       setBarOne('too-weak');
       setBarTwo('');
       setBarThree('');
       setBarFour('');
       setBarFive('');
-    } else if (passwordLength <= 12) {
+    } else if (timeToCrack.days <= 100) {
       setMeterTitle('Weak');
       setBarOne('weak');
       setBarTwo('weak');
       setBarThree('');
       setBarFour('');
       setBarFive('');
-    } else if (passwordLength <= 18) {
+    } else if (timeToCrack.days <= 1000) {
       setMeterTitle('Medium');
       setBarOne('medium');
       setBarTwo('medium');
       setBarThree('medium');
       setBarFour('');
       setBarFive('');
-    } else if (passwordLength <= 20) {
+    } else if (timeToCrack.days <= 1000000) {
       setMeterTitle('Strong');
       setBarOne('strong');
       setBarTwo('strong');
       setBarThree('strong');
       setBarFour('strong');
       setBarFive('');
-    } else if (passwordLength > 20) {
+    } else if (timeToCrack.days > 1000000) {
       setMeterTitle('Elite');
       setBarOne('elite');
       setBarTwo('elite');
@@ -139,27 +175,33 @@ const Generator = () => {
 
   const handleCopyPassword = () => {
     navigator.clipboard.writeText(password);
-    console.log('test1234', sliderRef);
   };
 
-  if (passwordGenerated) {
-    sliderRef.current.style.background = `linear-gradient(90deg, rgb(164, 255, 175), ${
-      windowSize.innerWidth > 768
-        ? `${(passwordLength / 35) * 100}%`
-        : `${(passwordLength / 22) * 100}%`
-    }, rgb(164, 255, 175), ${
-      windowSize.innerWidth > 768
-        ? `${(passwordLength / 35) * 100}%)`
-        : `${(passwordLength / 22) * 100}%)`
-    }`;
-    console.log('ran1234');
-  }
+  // prettier-ignore
+  const sliderBackgroundPercentage =
+    wordsChecked && windowSize.innerWidth > 768 && passwordLength < 4
+      ? `${Math.round(((passwordLength - 1) / (6 - 1)) * 100)}%`
+      : wordsChecked && windowSize.innerWidth > 768 && passwordLength >= 4
+      ? `${Math.round(((passwordLength - 1) / (6 - 1)) * 100)}%`
+      : wordsChecked && windowSize.innerWidth <= 768
+      ? `${Math.round((((passwordLength - 1) / (6 - 1)) * 100))}%`
+      : windowSize.innerWidth > 768
+      ? `${Math.round(((passwordLength - 7) / (35 - 7)) * 100)}%`
+      : `${Math.round(((passwordLength - 7) / (25 - 7)) * 100)}%`;
 
   return (
     <div className="wrapper">
       <div className="app-title">Password Generator</div>
       <div className="password">
-        <span>{password}</span>
+        {!upperCaseChecked &&
+        !lowerCaseChecked &&
+        !symbolsChecked &&
+        !numbersChecked &&
+        !wordsChecked ? (
+          <span className="no-option-selected">Select an option</span>
+        ) : (
+          <span>{password}</span>
+        )}
         <CopyIcon onClick={handleCopyPassword} className="copy-icon" />
       </div>
       <div className="generator-container">
@@ -170,12 +212,14 @@ const Generator = () => {
           </div>
           <div className="slider">
             <input
-              ref={sliderRef}
+              style={{
+                background: `linear-gradient(to right, #a4ffaf ${sliderBackgroundPercentage}, #18171F ${sliderBackgroundPercentage}`,
+              }}
               onChange={(e) => handleSliderChange(e)}
               value={passwordLength}
               type="range"
-              min="7"
-              max={windowSize.innerWidth > 768 ? '35' : '22'}
+              min={wordsChecked ? 1 : 7}
+              max={wordsChecked ? 6 : windowSize.innerWidth > 768 ? 35 : 25}
               steps="1"
             ></input>
           </div>
@@ -188,8 +232,11 @@ const Generator = () => {
             <input type="checkbox" checked={upperCaseChecked} />
             <span>Include Uppercase Letters</span>
           </div>
-          <div className="checkbox-container disabled">
-            <input type="checkbox" checked={true} disabled={true} />
+          <div
+            className="checkbox-container"
+            onClick={() => handleCheckboxToggle('lowercase')}
+          >
+            <input type="checkbox" checked={lowerCaseChecked} />
             <span>Include Lowercase Letters</span>
           </div>
           <div
@@ -206,6 +253,26 @@ const Generator = () => {
             <input type="checkbox" checked={symbolsChecked} />
             <span>Include Symbols</span>
           </div>
+          <div
+            onClick={() => handleCheckboxToggle('words')}
+            className="checkbox-container"
+          >
+            <div className="checkbox-container">
+              <input type="checkbox" checked={wordsChecked} />
+              <span>Use Words Only</span>
+            </div>
+          </div>
+          {wordsChecked && (
+            <div>
+              <span>Separator</span>
+              <input
+                value={passwordDelimiter}
+                maxLength={1}
+                className="delimiter-input"
+                onChange={(e) => setPasswordDelimiter(e.target.value)}
+              ></input>
+            </div>
+          )}
         </div>
         <div className="strength-container">
           <span className="strength-title">Strength</span>
@@ -221,15 +288,28 @@ const Generator = () => {
           </div>
         </div>
         <div>
-          <div className="time-to-crack-heading">
-            Your password would be cracked in:
-          </div>
-          <div className="time-to-crack">
-            <span className="estimated-time">
-              {passwordGenerated &&
-                yearFormatter(mellt.CheckPassword(password))}
-            </span>
-          </div>
+          <a
+            data-for="main"
+            data-tip="Based on 1 Billion hashes per second"
+            data-iscapture="true"
+          >
+            <div className="time-to-crack-heading">
+              Your password would be cracked in:
+            </div>
+            <div className="time-to-crack">
+              <span className="estimated-time">
+                {passwordGenerated &&
+                  daysYearsFormatter(timeToCrack.seconds, timeToCrack.days)}
+              </span>
+            </div>
+          </a>
+          <ReactTooltip
+            id="main"
+            place="top"
+            type="dark"
+            effect="float"
+            multiline={true}
+          />
         </div>
       </div>
     </div>
