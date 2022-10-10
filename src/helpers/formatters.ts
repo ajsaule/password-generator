@@ -95,7 +95,7 @@ export const characterFactory = (
   num = false,
   symbol = false
 ) => {
-  let characterArray = [];
+  let characterArray: Array<string> = [];
 
   if (upCase && !lowCase && !num && !symbol) characterArray = alphabetUpperCase;
   else if (upCase && lowCase && !num && !symbol)
@@ -146,7 +146,7 @@ export const characterFactory = (
   return characterArray;
 };
 
-export const secondsMinutesDaysYearsFormatter = (seconds) => {
+export const secondsMinutesDaysYearsFormatter = (seconds: number): string => {
   if (seconds <= 60) {
     return `${seconds} seconds`;
   } else if (seconds < 3600) {
@@ -165,7 +165,7 @@ export const secondsMinutesDaysYearsFormatter = (seconds) => {
 };
 
 // prettier-ignore
-export const daysYearsFormatter = (seconds, days) => {
+export const daysYearsFormatter = (seconds: number, days: number): string => {
   if (seconds === 0) {
     return 'instantly'
   } else if (seconds <= 60) {
@@ -195,7 +195,7 @@ export const daysYearsFormatter = (seconds, days) => {
   }
 };
 
-export const yearFormatter = (years) => {
+export const yearFormatter = (years: number): string => {
   if (years < 1000) {
     return years === 0
       ? '< 1 year'
@@ -214,13 +214,13 @@ export const yearFormatter = (years) => {
     return `${(years / 1000000000000000000).toFixed(2)} quadrillion years`;
   } else if (years <= 1000000000000000000000000) {
     return `${(years / 1000000000000000000000).toFixed(2)} quintillion years`;
-  } else if (years >= 1000000000000000000000000) {
+  } else {
     return `> 1 sextillion years`;
   }
 };
 
 // prettier-ignore
-export const hashPerSecondFormatter = (hashes) => {
+export const hashPerSecondFormatter = (hashes: number): string => {
   if (hashes <= 0) {
     return 'n/a'
   } else if (hashes < Math.pow(10, 3)) { // less than a thousand

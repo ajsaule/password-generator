@@ -41,7 +41,7 @@ const Generator = () => {
   const [windowSize, setWindowSize] = useState(getWindowSize());
 
   useEffect(() => {
-    const handleWindowResize = () => {
+    const handleWindowResize = (): void => {
       setWindowSize(getWindowSize());
     };
     window.addEventListener('resize', handleWindowResize);
@@ -58,7 +58,7 @@ const Generator = () => {
     }
   }, [windowSize]);
 
-  const characterGenerator = () => {
+  const characterGenerator = (): string => {
     const finalArray = characterFactory(
       upperCaseChecked,
       lowerCaseChecked,
@@ -72,14 +72,14 @@ const Generator = () => {
     return memorableList[Math.floor(Math.random() * memorableList.length)];
   };
 
-  const passwordGenerator = (pwdLength) => {
+  const passwordGenerator = (pwdLength: Number): string => {
     if (pwdLength >= 7) {
-      let passwordString = [...Array(parseInt(pwdLength))]
+      const passwordString = [...Array(parseInt(pwdLength))]
         .map(characterGenerator)
         .join('');
       return passwordString;
     } else {
-      let passwordString = [...Array(parseInt(pwdLength))]
+      const passwordString = [...Array(parseInt(pwdLength))]
         .map(wordGenerator)
         .join(passwordDelimiter);
       return passwordString;
@@ -90,7 +90,7 @@ const Generator = () => {
     setPasswordGenerated(true);
   }, [passwordGenerator]);
 
-  const handleCheckboxToggle = (type) => {
+  const handleCheckboxToggle = (type: string): void => {
     if (type === 'uppercase' && !wordsChecked) {
       setUpperCaseChecked((prev) => !prev);
     } else if (type === 'lowercase' && !wordsChecked) {
@@ -117,17 +117,20 @@ const Generator = () => {
     }
   }, [wordsChecked]);
 
-  const handleSliderChange = (e) => {
+  const handleSliderChange = (e: React.FormEvent<HTMLInputElement>) => {
     setPasswordLength(e.target.value);
     handlePasswordStrengthCheck();
     passwordGenerator(passwordLength);
   };
 
   const password = passwordGenerator(passwordLength);
-  const timeToCrack = checkPassword(password, hashesPerSecond);
+  const timeToCrack: { seconds: number; days: number } = checkPassword(
+    password,
+    hashesPerSecond
+  );
   // console.log('test12345', timeToCrack.seconds, timeToCrack.days);
 
-  const handlePasswordStrengthCheck = () => {
+  const handlePasswordStrengthCheck = (): void => {
     if (timeToCrack.days === 0) {
       setMeterTitle('Too-Weak');
       setBarOne('too-weak');

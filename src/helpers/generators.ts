@@ -15,17 +15,17 @@
  */
 
 /**
- * @var integer HashesPerSecond The number of attempts per second you expect
+ * @let integer HashesPerSecond The number of attempts per second you expect
  * an attacker to be able to attempt. Set to 1 billion by default.
  */
-// var hashesPerSecond = 1000000000;
+// let hashesPerSecond = 1000000000;
 
 /**
- * @var array $CharacterSets An array of strings, each string containing a
+ * @let array $CharacterSets An array of strings, each string containing a
  * character set. These should proceed in the order of simplest (0-9) to most
  * complex (all characters). More complex = more characters.
  */
-var characterSets = [
+const characterSets = [
   // We're making some guesses here about human nature (again much of this is
   // based on the TGP password strength checker, and Timothy "Thor" Mullen
   // deserves the credit for the thinking behind this). Basically we're combining
@@ -70,9 +70,12 @@ var characterSets = [
  * force a password, obviously more if you're a bank or other secure system.
  * @throws Exception If an error is encountered.
  */
-export const checkPassword = (password, hashesPerSecond = 1000000000) => {
+export const checkPassword = (
+  password: string,
+  hashesPerSecond: number = 1000000000
+): Object => {
   // Moved hashes per second into the function block so we can pass it through as a param
-  let hashPerSec = hashesPerSecond;
+  const hashPerSec = hashesPerSecond;
 
   // First check passwords in the common password file if available.
   // We do this because "password" takes 129 seconds, but is the first
@@ -82,7 +85,7 @@ export const checkPassword = (password, hashesPerSecond = 1000000000) => {
     commonPasswords = commonPasswords;
   }
   if (commonPasswords) {
-    var text = password.toLowerCase();
+    const text = password.toLowerCase();
     for (let t = 0; t < commonPasswords.length; t++) {
       if (commonPasswords[t] == text) {
         // If their password exists in the common file, then it's
@@ -95,17 +98,17 @@ export const checkPassword = (password, hashesPerSecond = 1000000000) => {
 
   // Figure out which character set the password is using (based on the most
   // "complex" character in it).
-  var base = '';
-  var baseKey = null;
+  let base = '';
+  let baseKey = null;
   for (let t = 0; t < password.length; t++) {
-    var char = password[t];
-    var foundChar = false;
+    const char = password[t];
+    let foundChar = false;
     for (
-      var characterSetKey = 0;
+      let characterSetKey = 0;
       characterSetKey < characterSets.length;
       characterSetKey++
     ) {
-      var characterSet = characterSets[characterSetKey];
+      const characterSet = characterSets[characterSetKey];
       if (baseKey <= characterSetKey && characterSet.indexOf(char) > -1) {
         baseKey = characterSetKey;
         base = characterSet;
@@ -136,10 +139,10 @@ export const checkPassword = (password, hashesPerSecond = 1000000000) => {
   // the list of possibilities that is your password. They can (in this example)
   // ignore anything between 6530 and 9999. Using this logic, 'aaa' would be a worse
   // password than 'zzz', because the attacker would encounter 'aaa' first.
-  var attempts = 0;
-  var charactersInBase = base.length;
-  var charactersInPassword = password.length;
-  for (var position = 0; position < charactersInPassword; position++) {
+  let attempts = 0;
+  const charactersInBase = base.length;
+  const charactersInPassword = password.length;
+  for (let position = 0; position < charactersInPassword; position++) {
     // We power up to the reverse position in the string. For example, if we're trying
     // to hack the 4 character PING code in the example above:
     // First number * (number of characters possible in the charset ^ length of password)
@@ -151,10 +154,10 @@ export const checkPassword = (password, hashesPerSecond = 1000000000) => {
     // and add on the last number
     // 9
     // Totals: 6000 + 500 + 20 + 9 = 6529 attempts before we encounter the correct password.
-    var powerOf = charactersInPassword - position - 1;
+    const powerOf = charactersInPassword - position - 1;
     // Character position within the base set. We add one on because strpos is base
     // 0, we want base 1.
-    var charAtPosition = base.indexOf(password[position]) + 1;
+    const charAtPosition = base.indexOf(password[position]) + 1;
     // If we're at the last character, simply add it's position in the character set
     // this would be the "9" in the pin code example above.
     if (powerOf == 0) {
@@ -171,9 +174,9 @@ export const checkPassword = (password, hashesPerSecond = 1000000000) => {
       // that by this character's position.
 
       // Multiplier is the (10^4) or (10^3), etc in the pin code example above.
-      var multiplier = Math.pow(charactersInBase, powerOf);
+      const multiplier = Math.pow(charactersInBase, powerOf);
       // New attempts is the number of attempts we're adding for this position.
-      var newAttempts = charAtPosition * multiplier;
+      const newAttempts = charAtPosition * multiplier;
       // Add that on to our existing number of attempts.
       attempts = attempts + newAttempts;
     }
@@ -188,15 +191,15 @@ export const checkPassword = (password, hashesPerSecond = 1000000000) => {
 
   // Below is using the new block scoped parameters that gets passed through from the invoked function
   // var perYear = hashPerSec * 60 * 60 * 24 * 365; // years
-  var perDay = hashPerSec * 60 * 60 * 24; // days
+  const perDay = hashPerSec * 60 * 60 * 24; // days
   // var perMinute = hashPerSec * 60; // minutes
-  var perSecond = hashPerSec; // seconds
+  const perSecond = hashPerSec; // seconds
 
   // This allows us to calculate a number of days to crack. We use days because anything
   // that can be cracked in less than a day is basically useless, so there's no point in
   // having a smaller granularity (hours for example).
-  var seconds = attempts / perSecond;
-  var days = attempts / perDay;
+  const seconds = attempts / perSecond;
+  const days = attempts / perDay;
 
   // If it's going to take more than a billion days to crack, just return a billion. This
   // helps when code outside this function isn't using bcmath. Besides, if the password
@@ -209,7 +212,7 @@ export const checkPassword = (password, hashesPerSecond = 1000000000) => {
 };
 
 /**
- * @const array of strings: CommonPasswords A variable containing an array of common
+ * @let array of strings: CommonPasswords A variable containing an array of common
  * passwords to check against. If you include common-passwords.js in your
  * HTML after including Mellt.js, the contents of that file will be used
  * if this isn't set.
@@ -217,7 +220,7 @@ export const checkPassword = (password, hashesPerSecond = 1000000000) => {
  * checking common passwords.
  */
 
-var commonPasswords = [
+let commonPasswords = [
   'password',
   '123456',
   '12345678',

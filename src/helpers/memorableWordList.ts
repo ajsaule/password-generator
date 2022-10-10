@@ -1,4 +1,4 @@
-export const memorableList = [
+export const memorableList: string[] = [
   'child',
   'food',
   'money',
