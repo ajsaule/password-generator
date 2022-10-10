@@ -1,5 +1,5 @@
 import React from 'react';
-import Generator from './components/Generator.js';
+import Generator from './components/Generator';
 import './index.css';
 
 function App() {
