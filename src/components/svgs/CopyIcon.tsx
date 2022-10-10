@@ -1,6 +1,12 @@
 import * as React from 'react';
 
-const CopyIcon = ({ onClick, className }) => (
+const CopyIcon = ({
+  onClick,
+  className,
+}: {
+  onClick: () => void;
+  className: string;
+}) => (
   <svg
     onClick={onClick}
     className={className}

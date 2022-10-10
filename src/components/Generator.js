@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import {
   characterFactory,
-  secondsMinutesDaysYearsFormatter,
   daysYearsFormatter,
-  yearFormatter,
   hashPerSecondFormatter,
 } from '../helpers/formatters';
 import { memorableList } from '../helpers/memorableWordList';
-import { Mellt } from '../helpers/generators';
+import { checkPassword } from '../helpers/generators';
 
 // import words from 'an-array-of-english-words';
 // import ReactTooltip from 'react-tooltip-rc';
 
 import '../styles/Generator.scss';
 
-import CopyIcon from './svgs/CopyIcon.js';
-
-let mellt = new Mellt();
+import CopyIcon from './svgs/CopyIcon';
 
 const getWindowSize = () => {
   const { innerWidth, innerHeight } = window;
@@ -128,7 +124,7 @@ const Generator = () => {
   };
 
   const password = passwordGenerator(passwordLength);
-  const timeToCrack = mellt.CheckPassword(password, hashesPerSecond);
+  const timeToCrack = checkPassword(password, hashesPerSecond);
   // console.log('test12345', timeToCrack.seconds, timeToCrack.days);
 
   const handlePasswordStrengthCheck = () => {
@@ -219,7 +215,6 @@ const Generator = () => {
               type="range"
               min={wordsChecked ? 1 : 7}
               max={wordsChecked ? 6 : windowSize.innerWidth > 768 ? 35 : 25}
-              steps="1"
             ></input>
           </div>
         </div>

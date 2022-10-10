@@ -120,6 +120,7 @@ export const characterFactory = (
   else if (num && !symbol && !upCase && !lowCase) characterArray = numbers;
   else if (num && symbol && !upCase && !lowCase)
     characterArray = [...numbers, ...specialChars];
+  // eslint-disable-next-line no-dupe-else-if
   else if (num && !symbol && upCase && !lowCase)
     characterArray = [...numbers, ...alphabetUpperCase];
   else if (num && symbol && upCase && !lowCase)
@@ -128,8 +129,10 @@ export const characterFactory = (
     characterArray = alphabetLowerCase;
   else if (lowCase && num && !symbol && !upCase)
     characterArray = [...alphabetLowerCase, ...numbers];
+  // eslint-disable-next-line no-dupe-else-if
   else if (lowCase && !num && symbol && !upCase)
     characterArray = [...alphabetLowerCase, ...specialChars];
+  // eslint-disable-next-line no-dupe-else-if
   else if (lowCase && num && symbol && !upCase)
     characterArray = [...alphabetLowerCase, ...numbers, ...specialChars];
   else if (upCase && lowCase && num && symbol)
@@ -168,9 +171,9 @@ export const daysYearsFormatter = (seconds, days) => {
   } else if (seconds <= 60) {
     return seconds === 1 ? `${seconds} second` : `${seconds} seconds`;
   } else if (seconds < 3600) {
-    return `${Math.floor(seconds / 60)} minutes`;
+    return Math.floor(seconds / 60) === 1 ? `${Math.floor(seconds / 60)} minute` : `${Math.floor(seconds / 60)} minutes`;
   } else if (seconds < 86400) {
-    return `${Math.floor(seconds / 3600)} hours`;
+    return Math.floor(seconds / 3600) === 1 ? `${Math.floor(seconds / 3600)} hour` : `${Math.floor(seconds / 3600)} hours`;
   } else if (days < 365) { // < 1 - less than a year
     return days === 1 ? `${days} day` : `${days} days`;
   } else if (days < 365000) { // < 1000 less than thousand years
@@ -218,12 +221,6 @@ export const yearFormatter = (years) => {
 
 // prettier-ignore
 export const hashPerSecondFormatter = (hashes) => {
-  // if (hashes < 1000) {
-  //   return hashes === 1 ? `${hashes} hash` : `${hashes} hashes`;
-  // } else if (hashes < 100000) {
-  //   return `${(hashes / 1000).toFixed(2)} thousand hashes`
-  // } else if (hashes < 1000000000) {
-
   if (hashes <= 0) {
     return 'n/a'
   } else if (hashes < Math.pow(10, 3)) { // less than a thousand

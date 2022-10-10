@@ -1,3 +1,4 @@
+import React from 'react';
 import Generator from './components/Generator.js';
 import './index.css';
 
