@@ -32,56 +32,89 @@ Users should be able to:
 
 ### Screenshot
 
-![](./screenshot.jpg)
-
-Add a screenshot of your solution. The easiest way to do this is to use Firefox to view your project, right-click the page and select "Take a Screenshot". You can choose either a full-height screenshot or a cropped one based on how long the page is. If it's very long, it might be best to crop it.
-
-Alternatively, you can use a tool like [FireShot](https://getfireshot.com/) to take the screenshot. FireShot has a free option, so you don't need to purchase it.
-
-Then crop/optimize/edit your image however you like, add it to your project, and update the file path in the image above.
-
-**Note: Delete this note and the paragraphs above when you add your screenshot. If you prefer not to add a screenshot, feel free to remove this entire section.**
+![Password Generator Screenshot](./public/password-generator-screenshot.png)
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
+- Live Site URL: [Password Generator Live Site](https://password-generator-ajsaule.vercel.app)
 
 ## My process
+
+I decided to do this project because it looked like something that I could achieve from my level of experience. I first decided to break down the design with some planning using Excalidraw which I will attach some screenshots to display my planning process, I broke down into sections that allowed me to better understand what needed to be built in the end. I also took some notes on how I would plan out building the core functionalities of the app.
 
 ### Built with
 
 - Semantic HTML5 markup
-- CSS custom properties
+- SASS (SCSS) - Syntactically Awesome Style Sheets
 - Flexbox
-- CSS Grid
 - Mobile-first workflow
 - [React](https://reactjs.org/) - JS library
-- [Next.js](https://nextjs.org/) - React framework
-- [Styled Components](https://styled-components.com/) - For styles
-
-**Note: These are just examples. Delete this note and replace the list above with your own choices**
+- [TypeScript](https://www.typescriptlang.org/)
 
 ### What I learned
 
-Use this section to recap over some of your major learnings while working through this project. Writing these out and providing code samples of areas you want to highlight is a great way to reinforce your own knowledge.
+I took some unique learnings away from this project:
 
-To see how you can add code snippets, see below:
+Firstly that you can use `Math.random()` and multiply it by the length of an array to generate a randomly selected index. Also I learned that you can create an array with with the array constructor and map over that, passing a function reference to that map method to execute and return ad 1:1 copy of that array but with the output of the given function that was passed to the method. The relevant code is below.
 
-```html
-<h1>Some HTML code I'm proud of</h1>
+```js
+const characterGenerator = (): string => {
+  const finalArray = characterFactory(
+    upperCaseChecked,
+    lowerCaseChecked,
+    numbersChecked,
+    symbolsChecked
+  );
+  return finalArray[Math.floor(Math.random() * finalArray.length)];
+};
+
+const wordGenerator = () => {
+  return memorableList[Math.floor(Math.random() * memorableList.length)];
+};
+
+const passwordGenerator = (pwdLength: Number): string => {
+  if (pwdLength >= 7) {
+    const passwordString = [...Array(parseInt(pwdLength))]
+      .map(characterGenerator)
+      .join('');
+    return passwordString;
+  } else {
+    const passwordString = [...Array(parseInt(pwdLength))]
+      .map(wordGenerator)
+      .join(passwordDelimiter);
+    return passwordString;
+  }
+};
 ```
 
+Some other learnings from this project would be using the resets on different browser types and targeting elements of the out of the box HTML5 tags such as <input/>.
+
 ```css
-.proud-of-this-css {
-  color: papayawhip;
+input[type='range']::-moz-range-track,
+input[type='range']::-ms-track,
+input[type='range']::-webkit-slider-runnable-track {
+  -ms-appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  border-radius: 0;
+  height: 8px;
 }
 ```
 
+Another interesting insight was using the `use-debounce` package, that was a hook coming from the community that allowed me to delay a function from running again for a certain period of time, I was using this with a `useEffect` that was listening for window re-size changes, so it helped significantly. One more thing I learned here is that clean up functions in `useEffect` hooks help with reducing memory leaks and unwanted behavior of apps.
+
 ```js
-const proudOfThisFunc = () => {
-  console.log('🎉');
-};
+const handleWindowResize = useDebouncedCallback((): void => {
+  setWindowSize(getWindowSize());
+}, 1000);
+
+useEffect(() => {
+  window.addEventListener('resize', handleWindowResize);
+
+  return () => {
+    window.removeEventListener('resize', handleWindowResize);
+  };
+});
 ```
 
 If you want more help with writing markdown, we'd recommend checking out [The Markdown Guide](https://www.markdownguide.org/) to learn more.
