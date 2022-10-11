@@ -53,8 +53,6 @@ I decided to do this project because it looked like something that I could achie
 
 ### What I learned
 
-I took some unique learnings away from this project:
-
 Firstly that you can use `Math.random()` and multiply it by the length of an array to generate a randomly selected array index. Also I learned that you can create an array with with the array constructor and map over that passing a function reference to that map method to execute and return a 1:1 copy of that array but with the output of the given function that was passed to the method. The relevant code is below.
 
 ```js
