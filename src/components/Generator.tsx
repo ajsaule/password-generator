@@ -7,6 +7,7 @@ import {
 import { memorableList } from '../helpers/memorableWordList';
 import { checkPassword } from '../helpers/generators';
 
+import { useDebouncedCallback } from 'use-debounce';
 // import words from 'an-array-of-english-words';
 // import ReactTooltip from 'react-tooltip-rc';
 
@@ -31,7 +32,7 @@ const Generator = () => {
   const [symbolsChecked, setSymbolsChecked] = useState(false);
   const [wordsChecked, setWordsChecked] = useState(false);
   // Strength meter bar variables
-  const [meterTitle, setMeterTitle] = useState('Too-weak');
+  const [meterTitle, setMeterTitle] = useState('');
   const [barOne, setBarOne] = useState('');
   const [barTwo, setBarTwo] = useState('');
   const [barThree, setBarThree] = useState('');
@@ -40,23 +41,17 @@ const Generator = () => {
   // Window resize listener
   const [windowSize, setWindowSize] = useState(getWindowSize());
 
+  const handleWindowResize = useDebouncedCallback((): void => {
+    setWindowSize(getWindowSize());
+  }, 1000);
+
   useEffect(() => {
-    const handleWindowResize = (): void => {
-      setWindowSize(getWindowSize());
-    };
     window.addEventListener('resize', handleWindowResize);
 
     return () => {
       window.removeEventListener('resize', handleWindowResize);
     };
-  }, []);
-
-  useEffect(() => {
-    if (windowSize.innerWidth > 767 && windowSize.innerWidth < 800) {
-      setPasswordLength(7);
-      handlePasswordStrengthCheck();
-    }
-  }, [windowSize]);
+  });
 
   const characterGenerator = (): string => {
     const finalArray = characterFactory(
@@ -166,12 +161,15 @@ const Generator = () => {
       setBarThree('elite');
       setBarFour('elite');
       setBarFive('elite');
+    } else {
+      setMeterTitle('');
+      setBarOne('');
+      setBarTwo('');
+      setBarThree('');
+      setBarFour('');
+      setBarFive('');
     }
   };
-
-  useEffect(() => {
-    handlePasswordStrengthCheck();
-  }, [handlePasswordStrengthCheck]);
 
   const handleCopyPassword = () => {
     navigator.clipboard.writeText(password);
