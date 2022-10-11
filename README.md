@@ -11,7 +11,7 @@ This is a solution to the [Password generator app challenge on Frontend Mentor](
 - [My process](#my-process)
   - [Built with](#built-with)
   - [What I learned](#what-i-learned)
-  - [Continued development](#continued-development)
+  - [Continued development of this project](#continued-development)
   - [Useful resources](#useful-resources)
 - [Author](#author)
 - [Acknowledgments](#acknowledgments)
@@ -36,7 +36,7 @@ Users should be able to:
 
 ### Links
 
-- Live Site URL: [Password Generator Live Site](https://password-generator-ajsaule.vercel.app)
+- Live Site URL: [Password Generator](https://password-generator-ajsaule.vercel.app)
 
 ## My process
 
@@ -55,7 +55,7 @@ I decided to do this project because it looked like something that I could achie
 
 I took some unique learnings away from this project:
 
-Firstly that you can use `Math.random()` and multiply it by the length of an array to generate a randomly selected index. Also I learned that you can create an array with with the array constructor and map over that, passing a function reference to that map method to execute and return ad 1:1 copy of that array but with the output of the given function that was passed to the method. The relevant code is below.
+Firstly that you can use `Math.random()` and multiply it by the length of an array to generate a randomly selected array index. Also I learned that you can create an array with with the array constructor and map over that passing a function reference to that map method to execute and return a 1:1 copy of that array but with the output of the given function that was passed to the method. The relevant code is below.
 
 ```js
 const characterGenerator = (): string => {
@@ -87,7 +87,7 @@ const passwordGenerator = (pwdLength: Number): string => {
 };
 ```
 
-Some other learnings from this project would be using the resets on different browser types and targeting elements of the out of the box HTML5 tags such as <input/>.
+Some other learnings from this project would be using the resets on different browsers and targeting elements of the out of the box HTML5 tags such as <input/>.
 
 ```css
 input[type='range']::-moz-range-track,
@@ -101,7 +101,7 @@ input[type='range']::-webkit-slider-runnable-track {
 }
 ```
 
-Another interesting insight was using the `use-debounce` package, that was a hook coming from the community that allowed me to delay a function from running again for a certain period of time, I was using this with a `useEffect` that was listening for window re-size changes, so it helped significantly. One more thing I learned here is that clean up functions in `useEffect` hooks help with reducing memory leaks and unwanted behavior of apps.
+Another interesting insight was using the `use-debounce` package, that was a hook coming from the community that allowed me to delay a function from running again for a certain period of time, I was using this with a `useEffect` that was listening for window re-size changes, it helped significantly. One more thing I learned here is that clean up functions in `useEffect` hooks help with reducing memory leaks and unwanted behavior of apps.
 
 ```js
 const handleWindowResize = useDebouncedCallback((): void => {
@@ -117,33 +117,25 @@ useEffect(() => {
 });
 ```
 
-If you want more help with writing markdown, we'd recommend checking out [The Markdown Guide](https://www.markdownguide.org/) to learn more.
+### Continued development of this project
 
-**Note: Delete this note and the content within this section and replace with your own learnings.**
+Things I would like to implement on this project:
 
-### Continued development
-
-Use this section to outline areas that you want to continue focusing on in future projects. These could be concepts you're still not completely comfortable with or techniques you found useful that you want to refine and perfect.
-
-**Note: Delete this note and the content within this section and replace with your own plans for continued development.**
+- An input field so the user can input their custom password and check how long it would take for it to be cracked
+- A checkbox to select camel case, snake case, pascal case and kebab case is already implemented
+- A tooltip when you hover over the time to crack field
 
 ### Useful resources
 
-- [Example resource 1](https://www.example.com) - This helped me for XYZ reason. I really liked this pattern and will use it going forward.
-- [Example resource 2](https://www.example.com) - This is an amazing article which helped me finally understand XYZ. I'd recommend it to anyone still learning this concept.
-
-**Note: Delete this note and replace the list above with resources that helped you during the challenge. These could come in handy for anyone viewing your solution or for yourself when you look back on this project in the future.**
+- [Reactiflux Discord](https://www.reactiflux.com/) - This discord is amazing when you get stuck and can't find much help on the internet or SO
+- [Stack overflow](https://www.stackoverflow.com/) - Helped me to get unstuck at various phases.
 
 ## Author
 
-- Website - [Add your name here](https://www.your-site.com)
-- Frontend Mentor - [@yourusername](https://www.frontendmentor.io/profile/yourusername)
-- Twitter - [@yourusername](https://www.twitter.com/yourusername)
-
-**Note: Delete this note and add/remove/edit lines above based on what links you'd like to share.**
+- Website - [Andrej Saule](https://www.andrejsaule.com)
+- Frontend Mentor - [@ajsaule](https://www.frontendmentor.io/profile/ajsaule)
+- Twitter - [@ajsaule](https://www.twitter.com/ajsaule)
 
 ## Acknowledgments
 
-This is where you can give a hat tip to anyone who helped you out on this project. Perhaps you worked in a team or got some inspiration from someone else's solution. This is the perfect place to give them some credit.
-
-**Note: Delete this note and edit this section's content as necessary. If you completed this challenge by yourself, feel free to delete this section entirely.**
+Big thanks to the devs from Reactiflux Discord that helped me when I got stuck along the way. I learned a lot from all of you, thanks for your volunteered time and patience you had with me.
