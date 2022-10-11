@@ -85,7 +85,7 @@ const passwordGenerator = (pwdLength: Number): string => {
 };
 ```
 
-Some other learnings from this project would be using the resets on different browsers and targeting elements of the out of the box HTML5 tags such as <input/>.
+Some other learnings from this project would be using the resets on different browsers and targeting elements of the out of the box HTML5 tags such as `<input/>`.
 
 ```css
 input[type='range']::-moz-range-track,
