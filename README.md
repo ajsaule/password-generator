@@ -42,6 +42,8 @@ Users should be able to:
 
 I decided to do this project because it looked like something that I could achieve from my level of experience. I first decided to break down the design with some planning using Excalidraw which I will attach some screenshots to display my planning process, I broke down into sections that allowed me to better understand what needed to be built in the end. I also took some notes on how I would plan out building the core functionalities of the app.
 
+![Excalidraw Screenshot](./public/excalidraw-screenshot.png)
+
 ### Built with
 
 - Semantic HTML5 markup
