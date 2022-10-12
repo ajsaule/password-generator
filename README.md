@@ -119,13 +119,9 @@ const sliderBackgroundPercentage =
 
 2. Then assigning the inline style the background property with the interpolated sting of percentages so they can dynamically shift when the slider is moved across the progress bar
 
-```css
-<input
-  style={{
-    background: `linear-gradient(to right, #a4ffaf ${sliderBackgroundPercentage}, #18171F ${sliderBackgroundPercentage}`,
-  }}
-  ...
-/>
+```html
+<input style={{ background: `linear-gradient(to right, #a4ffaf
+${sliderBackgroundPercentage}, #18171F ${sliderBackgroundPercentage}`, }} ... />
 ```
 
 Lastly from this project would be using the resets on different browsers and targeting elements of the out of the box HTML5 tags such as `<input/>`.
