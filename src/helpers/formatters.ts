@@ -165,8 +165,10 @@ export const secondsMinutesDaysYearsFormatter = (seconds: number): string => {
 };
 
 // prettier-ignore
-export const daysYearsFormatter = (seconds: number, days: number): string => {
-  if (seconds === 0) {
+export const daysYearsFormatter = (seconds: number, days: number, timeToCrack: number): string => {
+  if (timeToCrack == -1) {
+    return 'your password is too basic'
+  } else if (seconds === 0) {
     return 'instantly'
   } else if (seconds <= 60) {
     return seconds === 1 ? `${seconds} second` : `${seconds} seconds`;

@@ -85,20 +85,6 @@ const passwordGenerator = (pwdLength: Number): string => {
 };
 ```
 
-Some other learnings from this project would be using the resets on different browsers and targeting elements of the out of the box HTML5 tags such as `<input/>`.
-
-```css
-input[type='range']::-moz-range-track,
-input[type='range']::-ms-track,
-input[type='range']::-webkit-slider-runnable-track {
-  -ms-appearance: none;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  border-radius: 0;
-  height: 8px;
-}
-```
-
 Another interesting insight was using the `use-debounce` package, that was a hook coming from the community that allowed me to delay a function from running again for a certain period of time, I was using this with a `useEffect` that was listening for window re-size changes, it helped significantly. One more thing I learned here is that clean up functions in `useEffect` hooks help with reducing memory leaks and unwanted behavior of apps.
 
 ```js
@@ -113,6 +99,47 @@ useEffect(() => {
     window.removeEventListener('resize', handleWindowResize);
   };
 });
+```
+
+Other learnings from this project would be that you can set the background `linear-gradient()` to apply a progressive fill based on some JS variables you pass interpolate into the string that is passed to the inline style on a HTML element:
+
+1. Firstly calculating the percentage for how much of the background the fill will be taking up (I needed to use `// prettier-ignore` here to set some custom brackets in the code)
+
+```js
+// prettier-ignore
+const sliderBackgroundPercentage =
+  wordsChecked && windowSize.innerWidth > 768
+    ? `${Math.round(((passwordLength - 1) / (6 - 1)) * 100)}%`
+    : wordsChecked && windowSize.innerWidth <= 768
+    ? `${Math.round(((passwordLength - 1) / (6 - 1)) * 100)}%`
+    : windowSize.innerWidth > 768
+    ? `${Math.round(((passwordLength - 7) / (35 - 7)) * 100)}%`
+    : `${Math.round(((passwordLength - 7) / (25 - 7)) * 100)}%`;
+```
+
+2. Then assigning the inline style the background property with the interpolated sting of percentages so they can dynamically shift when the slider is moved across the progress bar
+
+```css
+<input
+  style={{
+    background: `linear-gradient(to right, #a4ffaf ${sliderBackgroundPercentage}, #18171F ${sliderBackgroundPercentage}`,
+  }}
+  ...
+/>
+```
+
+Lastly from this project would be using the resets on different browsers and targeting elements of the out of the box HTML5 tags such as `<input/>`.
+
+```css
+input[type='range']::-moz-range-track,
+input[type='range']::-ms-track,
+input[type='range']::-webkit-slider-runnable-track {
+  -ms-appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  border-radius: 0;
+  height: 8px;
+}
 ```
 
 ### Continued development of this project

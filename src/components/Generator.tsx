@@ -21,6 +21,7 @@ const getWindowSize = () => {
 };
 
 const Generator = () => {
+  const [ownPassword, setOwnPassword] = useState('');
   const [passwordLength, setPasswordLength] = useState(7);
   const [passwordGenerated, setPasswordGenerated] = useState(false);
   const [passwordDelimiter, setPasswordDelimiter] = useState('-');
@@ -31,6 +32,7 @@ const Generator = () => {
   const [numbersChecked, setNumbersChecked] = useState(false);
   const [symbolsChecked, setSymbolsChecked] = useState(false);
   const [wordsChecked, setWordsChecked] = useState(false);
+  const [ownPasswordChecked, setOwnPasswordChecked] = useState(false);
   // Strength meter bar variables
   const [meterTitle, setMeterTitle] = useState('');
   const [barOne, setBarOne] = useState('');
@@ -85,21 +87,40 @@ const Generator = () => {
     setPasswordGenerated(true);
   }, [passwordGenerator]);
 
-  const handleCheckboxToggle = (type: string): void => {
-    if (type === 'uppercase' && !wordsChecked) {
+  const handleCheckboxToggle = (
+    type: string,
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ): void => {
+    if (type === 'uppercase' && !ownPasswordChecked && !wordsChecked) {
       setUpperCaseChecked((prev) => !prev);
-    } else if (type === 'lowercase' && !wordsChecked) {
+    } else if (type === 'lowercase' && !wordsChecked && !ownPasswordChecked) {
       setLowerCaseChecked((prev) => !prev);
-    } else if (type === 'numbers' && !wordsChecked) {
+    } else if (type === 'numbers' && !wordsChecked && !ownPasswordChecked) {
       setNumbersChecked((prev) => !prev);
-    } else if (type === 'symbols' && !wordsChecked) {
+    } else if (type === 'symbols' && !wordsChecked && !ownPasswordChecked) {
       setSymbolsChecked((prev) => !prev);
-    } else {
+    } else if (type === 'words') {
       setWordsChecked((prev) => !prev);
       setUpperCaseChecked(false);
       setLowerCaseChecked(false);
       setNumbersChecked(false);
       setSymbolsChecked(false);
+      setOwnPasswordChecked(false);
+    } else if (type === 'own-password') {
+      setOwnPasswordChecked((prev) => !prev);
+      setWordsChecked(false);
+      setUpperCaseChecked(false);
+      setLowerCaseChecked(false);
+      setNumbersChecked(false);
+      setSymbolsChecked(false);
+    } else {
+      console.log('test123456');
+      if (e.target.id === 'uppercase') setUpperCaseChecked(true);
+      if (e.target.id === 'lowercase') setLowerCaseChecked(true);
+      if (e.target.id === 'numbers') setNumbersChecked(true);
+      if (e.target.id === 'symbols') setSymbolsChecked(true);
+      if (wordsChecked === true) setWordsChecked(false);
+      if (ownPasswordChecked === true) setOwnPasswordChecked(false);
     }
     handlePasswordStrengthCheck();
   };
@@ -118,12 +139,20 @@ const Generator = () => {
     passwordGenerator(passwordLength);
   };
 
+  const handleOwnPasswordChange = (e: React.FormEvent<HTMLInputElement>) => {
+    const removedWhitespacePassword = e.target.value.replace(/ /g, '');
+    setOwnPassword(removedWhitespacePassword);
+  };
+
+  useEffect(() => {
+    handlePasswordStrengthCheck();
+  }, [ownPassword]);
+
   const password = passwordGenerator(passwordLength);
-  const timeToCrack: { seconds: number; days: number } = checkPassword(
-    password,
-    hashesPerSecond
-  );
-  // console.log('test12345', timeToCrack.seconds, timeToCrack.days);
+  const timeToCrack: { seconds: number; days: number } = ownPasswordChecked
+    ? checkPassword(ownPassword, hashesPerSecond)
+    : checkPassword(password, hashesPerSecond);
+  // console.log('test12345', timeToCrack.seconds, timeToCrack.days, timeToCrack);
 
   const handlePasswordStrengthCheck = (): void => {
     if (timeToCrack.days === 0) {
@@ -193,8 +222,16 @@ const Generator = () => {
         !lowerCaseChecked &&
         !symbolsChecked &&
         !numbersChecked &&
-        !wordsChecked ? (
+        !wordsChecked &&
+        !ownPasswordChecked ? (
           <span className="no-option-selected">Select an option</span>
+        ) : ownPasswordChecked ? (
+          <input
+            type="text"
+            className="own-password"
+            value={ownPassword}
+            onChange={(e) => handleOwnPasswordChange(e)}
+          />
         ) : (
           <span>{password}</span>
         )}
@@ -204,48 +241,54 @@ const Generator = () => {
         <div>
           <div className="length-container">
             <span className="length-title">Character Length</span>
-            <span className="chars">{passwordLength}</span>
+            {!ownPasswordChecked ? (
+              <span className="chars">{passwordLength}</span>
+            ) : (
+              <span className="chars">{ownPassword.length}</span>
+            )}
           </div>
-          <div className="slider">
-            <input
-              style={{
-                background: `linear-gradient(to right, #a4ffaf ${sliderBackgroundPercentage}, #18171F ${sliderBackgroundPercentage}`,
-              }}
-              onChange={(e) => handleSliderChange(e)}
-              value={passwordLength}
-              type="range"
-              min={wordsChecked ? 1 : 7}
-              max={wordsChecked ? 6 : windowSize.innerWidth > 768 ? 35 : 25}
-            ></input>
-          </div>
+          {!ownPasswordChecked && (
+            <div className="slider">
+              <input
+                style={{
+                  background: `linear-gradient(to right, #a4ffaf ${sliderBackgroundPercentage}, #18171F ${sliderBackgroundPercentage}`,
+                }}
+                onChange={(e) => handleSliderChange(e)}
+                value={passwordLength}
+                type="range"
+                min={wordsChecked ? 1 : 7}
+                max={wordsChecked ? 6 : windowSize.innerWidth > 768 ? 35 : 25}
+              ></input>
+            </div>
+          )}
         </div>
         <div className="options-container">
           <div
-            onClick={() => handleCheckboxToggle('uppercase')}
+            onClick={(e) => handleCheckboxToggle('uppercase', e)}
             className="checkbox-container"
           >
-            <input type="checkbox" checked={upperCaseChecked} />
+            <input type="checkbox" checked={upperCaseChecked} id="uppercase" />
             <span>Include Uppercase Letters</span>
           </div>
           <div
             className="checkbox-container"
-            onClick={() => handleCheckboxToggle('lowercase')}
+            onClick={(e) => handleCheckboxToggle('lowercase', e)}
           >
-            <input type="checkbox" checked={lowerCaseChecked} />
+            <input type="checkbox" checked={lowerCaseChecked} id="lowercase" />
             <span>Include Lowercase Letters</span>
           </div>
           <div
-            onClick={() => handleCheckboxToggle('numbers')}
+            onClick={(e) => handleCheckboxToggle('numbers', e)}
             className="checkbox-container"
           >
-            <input type="checkbox" checked={numbersChecked} />
+            <input type="checkbox" checked={numbersChecked} id="numbers" />
             <span>Include Numbers</span>
           </div>
           <div
-            onClick={() => handleCheckboxToggle('symbols')}
+            onClick={(e) => handleCheckboxToggle('symbols', e)}
             className="checkbox-container"
           >
-            <input type="checkbox" checked={symbolsChecked} />
+            <input type="checkbox" checked={symbolsChecked} id="symbols" />
             <span>Include Symbols</span>
           </div>
           <div
@@ -256,6 +299,13 @@ const Generator = () => {
               <input type="checkbox" checked={wordsChecked} />
               <span>Use Words Only</span>
             </div>
+          </div>
+          <div
+            onClick={() => handleCheckboxToggle('own-password')}
+            className="checkbox-container"
+          >
+            <input type="checkbox" checked={ownPasswordChecked} />
+            <span>Use your own password</span>
           </div>
           {wordsChecked && (
             <div>
@@ -297,7 +347,11 @@ const Generator = () => {
           <div className="time-to-crack">
             <span className="estimated-time">
               {passwordGenerated &&
-                daysYearsFormatter(timeToCrack.seconds, timeToCrack.days)}
+                daysYearsFormatter(
+                  timeToCrack.seconds,
+                  timeToCrack.days,
+                  timeToCrack
+                )}
             </span>
           </div>
           {/* </a> */}
