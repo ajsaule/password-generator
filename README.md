@@ -162,3 +162,5 @@ Things I would like to implement on this project:
 ## Acknowledgments
 
 Big thanks to the devs from Reactiflux Discord that helped me when I got stuck along the way. I learned a lot from all of you, thanks for your volunteered time and patience you had with me.
+
+Thanks to [@cbserra](https://www.frontendmentor.io/profile/cbserra) for providing a redesign for my whole app UI aligning it more toward the previous design that was first given in the figma file. His design can be seen here - [https://codepen.io/cbserra/pen/RwyqpVW](https://codepen.io/cbserra/pen/RwyqpVW). I will at some stage redesign the whole app to make it look in line with his design.

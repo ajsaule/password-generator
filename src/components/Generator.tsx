@@ -22,7 +22,7 @@ const getWindowSize = () => {
 
 const Generator = () => {
   const [ownPassword, setOwnPassword] = useState('');
-  const [passwordLength, setPasswordLength] = useState(7);
+  const [passwordLength, setPasswordLength] = useState('7');
   const [passwordGenerated, setPasswordGenerated] = useState(false);
   const [passwordDelimiter, setPasswordDelimiter] = useState('-');
   const [hashesPerSecond, setHashesPerSecond] = useState(1000000000);
@@ -69,14 +69,16 @@ const Generator = () => {
     return memorableList[Math.floor(Math.random() * memorableList.length)];
   };
 
-  const passwordGenerator = (pwdLength: Number): string => {
-    if (pwdLength >= 7) {
-      const passwordString = [...Array(parseInt(pwdLength))]
+  const passwordGenerator = (pwdLength: string): string => {
+    const pwdLengthNumber = parseInt(pwdLength);
+
+    if (pwdLengthNumber >= 7) {
+      const passwordString = [...Array(pwdLengthNumber)]
         .map(characterGenerator)
         .join('');
       return passwordString;
     } else {
-      const passwordString = [...Array(parseInt(pwdLength))]
+      const passwordString = [...Array(pwdLengthNumber)]
         .map(wordGenerator)
         .join(passwordDelimiter);
       return passwordString;
@@ -87,10 +89,7 @@ const Generator = () => {
     setPasswordGenerated(true);
   }, [passwordGenerator]);
 
-  const handleCheckboxToggle = (
-    type: string,
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ): void => {
+  const handleCheckboxToggle = (type: string, e: any): void => {
     if (type === 'uppercase' && !ownPasswordChecked && !wordsChecked) {
       setUpperCaseChecked((prev) => !prev);
     } else if (type === 'lowercase' && !wordsChecked && !ownPasswordChecked) {
@@ -127,19 +126,19 @@ const Generator = () => {
 
   useEffect(() => {
     if (wordsChecked) {
-      setPasswordLength(1);
+      setPasswordLength('1');
     } else {
-      setPasswordLength(7);
+      setPasswordLength('7');
     }
   }, [wordsChecked]);
 
-  const handleSliderChange = (e: React.FormEvent<HTMLInputElement>) => {
+  const handleSliderChange = (e: any) => {
     setPasswordLength(e.target.value);
     handlePasswordStrengthCheck();
     passwordGenerator(passwordLength);
   };
 
-  const handleOwnPasswordChange = (e: React.FormEvent<HTMLInputElement>) => {
+  const handleOwnPasswordChange = (e: any) => {
     const removedWhitespacePassword = e.target.value.replace(/ /g, '');
     setOwnPassword(removedWhitespacePassword);
   };
@@ -149,7 +148,7 @@ const Generator = () => {
   }, [ownPassword]);
 
   const password = passwordGenerator(passwordLength);
-  const timeToCrack: { seconds: number; days: number } = ownPasswordChecked
+  const timeToCrack: any = ownPasswordChecked
     ? checkPassword(ownPassword, hashesPerSecond)
     : checkPassword(password, hashesPerSecond);
   // console.log('test12345', timeToCrack.seconds, timeToCrack.days, timeToCrack);
@@ -207,12 +206,12 @@ const Generator = () => {
   // prettier-ignore
   const sliderBackgroundPercentage =
     wordsChecked && windowSize.innerWidth > 768 
-      ? `${Math.round(((passwordLength - 1) / (6 - 1)) * 100)}%`
+      ? `${Math.round(((parseInt(passwordLength) - 1) / (6 - 1)) * 100)}%`
       : wordsChecked && windowSize.innerWidth <= 768
-      ? `${Math.round((((passwordLength - 1) / (6 - 1)) * 100))}%`
+      ? `${Math.round((((parseInt(passwordLength) - 1) / (6 - 1)) * 100))}%`
       : windowSize.innerWidth > 768
-      ? `${Math.round(((passwordLength - 7) / (35 - 7)) * 100)}%`
-      : `${Math.round(((passwordLength - 7) / (25 - 7)) * 100)}%`;
+      ? `${Math.round(((parseInt(passwordLength) - 7) / (35 - 7)) * 100)}%`
+      : `${Math.round(((parseInt(passwordLength) - 7) / (25 - 7)) * 100)}%`;
 
   return (
     <div className="wrapper">
@@ -292,7 +291,7 @@ const Generator = () => {
             <span>Include Symbols</span>
           </div>
           <div
-            onClick={() => handleCheckboxToggle('words')}
+            onClick={(e) => handleCheckboxToggle('words', e)}
             className="checkbox-container"
           >
             <div className="checkbox-container">
@@ -301,7 +300,7 @@ const Generator = () => {
             </div>
           </div>
           <div
-            onClick={() => handleCheckboxToggle('own-password')}
+            onClick={(e) => handleCheckboxToggle('own-password', e)}
             className="checkbox-container"
           >
             <input type="checkbox" checked={ownPasswordChecked} />
@@ -365,7 +364,7 @@ const Generator = () => {
               min="0"
               placeholder="hashes per second"
               className="hashes-per-second"
-              onChange={(e) =>
+              onChange={(e: any) =>
                 hashesPerSecond > 0
                   ? setHashesPerSecond(e.target.value)
                   : setHashesPerSecond(1)

@@ -99,7 +99,7 @@ export const checkPassword = (
   // Figure out which character set the password is using (based on the most
   // "complex" character in it).
   let base = '';
-  let baseKey = null;
+  let baseKey = 0;
   for (let t = 0; t < password.length; t++) {
     const char = password[t];
     let foundChar = false;
